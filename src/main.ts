@@ -13,7 +13,7 @@ async function bootstrap() {
   // Create an instance of QueueService to access the queue
   const queueService = app.get(QueueService);
   const myQueue: Queue = queueService['myQueue']; // Access the queue instance
-
+  const employeeQueue: Queue = queueService['employeeQueue']; // Access the queue instance
   // Create an Express app for Bull Board
   const serverAdapter = new ExpressAdapter();
   const appQueue = express();
@@ -23,6 +23,7 @@ async function bootstrap() {
   createBullBoard({
     queues: [
       new BullAdapter(myQueue), // Now using the actual queue instance
+      new BullAdapter(employeeQueue),
     ],
     serverAdapter,
   });

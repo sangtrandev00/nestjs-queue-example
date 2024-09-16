@@ -4,6 +4,9 @@ import { BullModule } from '@nestjs/bull';
 import { QueueProcessor } from './queue.processor';
 import { QueueService } from './queue.service';
 import { QueueController } from './queue.controller';
+import { EmployeeProcessor } from './employee.processor';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Employee } from 'src/employee/employee.entity';
 
 @Module({
   imports: [
@@ -16,8 +19,13 @@ import { QueueController } from './queue.controller';
     BullModule.registerQueue({
       name: 'my_queue',
     }),
+    BullModule.registerQueue({
+      name: 'employee_queue',
+    }),
+    TypeOrmModule.forFeature([Employee]),
   ],
-  providers: [QueueProcessor, QueueService],
+  providers: [QueueProcessor, QueueService, EmployeeProcessor],
   controllers: [QueueController],
+  exports: [QueueService]
 })
 export class QueueModule { }
