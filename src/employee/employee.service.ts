@@ -12,10 +12,10 @@ export class EmployeeService {
         private readonly queueService: QueueService
     ) { }
 
-
-
+    /*
+    Function to add a job to the queue for creating an employee
+    */
     async createData(employeeData: Partial<Employee>) {
-        // Add the job to the queue
         await this.queueService.addEmployeeJob({
             type: 'CREATE_EMPLOYEE',
             data: employeeData

@@ -1,5 +1,5 @@
 // queue.processor.ts
-import { Process, Processor } from '@nestjs/bull';
+import { OnQueueCompleted, Process, Processor } from '@nestjs/bull';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Job } from 'bull';
 import { Employee } from 'src/employee/employee.entity';
@@ -28,14 +28,24 @@ export class EmployeeProcessor {
   }
 
   // Test queue! (Khi nào một queue thành công, thất bại bại? Khi nào thì nó sẽ vào waiting hay active active?)
-  @Process('test_queue')
+  // Hiểu tại sao lại có 2 job starting rồi! ==> Do worker có thể add. còn proccess thì chỉ có 1
+  @Process({
+    name: 'test_queue',
+    concurrency: 1
+  })
   async handleTestQueue(job: Job) {
-    console.log('Starting job', job.id, 'Data:', job.data);
+    console.log('Starting job', job.id, 'Data:', job.data); // active!
 
     // Simulate a longer process
     await new Promise(resolve => setTimeout(resolve, 10000)); // 10 seconds delay
 
     console.log('Finished job', job.id);
-    return { result: 'Test job completed', ...job.data };
+    return { result: 'Test job completed', ...job.data }; // success!
   }
+
+
+  // @OnQueueCompleted()
+  // async onQueueCompleted(job: Job) {
+  //   console.log('Queue completed', job.id);
+  // }
 }

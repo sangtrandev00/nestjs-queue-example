@@ -13,9 +13,12 @@ export class EmployeeController {
             { name: 'Jane Smith', position: 'Designer', salary: 70000 },
             { name: 'Bob Johnson', position: 'Manager', salary: 90000 },
         ];
-
+        let i = 1;
         for (const job of jobs) {
-            await this.queueService.addTestQueue(job);
+            console.log("count", i);
+            const result = await this.queueService.addTestQueue(job);
+            console.log('Job result:', result);
+            i++;
         }
 
         return { message: '3 jobs added to the queue' };
